@@ -56,7 +56,12 @@ class CMDBParser:
         file_path = filedialog.askopenfilename(filetypes=[("CSV files", "*.csv")])
         if file_path:
             try:
-                self.cmdb_data = pd.read_csv(file_path)
+                # Try UTF-8 first, then fallback to other encodings
+                try:
+                    self.cmdb_data = pd.read_csv(file_path, encoding='utf-8')
+                except UnicodeDecodeError:
+                    self.cmdb_data = pd.read_csv(file_path, encoding='latin1')
+                
                 self.status_label.config(text="CMDB CSV loaded successfully")
                 self.check_ready()
             except Exception as e:
@@ -66,8 +71,11 @@ class CMDBParser:
         file_path = filedialog.askopenfilename(filetypes=[("CSV files", "*.csv")])
         if file_path:
             try:
-                # Read the CSV and ensure it has a 'hostname' column
-                self.hostname_data = pd.read_csv(file_path)
+                # Try UTF-8 first, then fallback to other encodings
+                try:
+                    self.hostname_data = pd.read_csv(file_path, encoding='utf-8')
+                except UnicodeDecodeError:
+                    self.hostname_data = pd.read_csv(file_path, encoding='latin1')
                 
                 # If there's only one column, assume it's the hostname
                 if len(self.hostname_data.columns) == 1:
