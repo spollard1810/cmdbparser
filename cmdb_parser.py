@@ -117,6 +117,9 @@ class CMDBParser:
             # Rename 'name' to 'hostname' for clarity
             result = result.rename(columns={'name': 'hostname'})
             
+            # Remove rows where all values are NaN/empty
+            result = result.dropna(how='all')
+            
             # Generate output filename with date
             date_str = datetime.now().strftime("%Y-%m-%d")
             output_file = f"clean_csv_{date_str}.csv"
